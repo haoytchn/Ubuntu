@@ -23,17 +23,6 @@
 > 3. uname -a
 > 4. dpkg --print-architecture
 
-
-
-```bash
-安装openmpi
-sudo apt-get install openmpi-bin openmpi-doc libopenmpi-dev
-安装mpi
-sudo apt install mpich
-```
-
-/home/hyt/lsdyna/ls11mpp info
-
 # ANSYS LIC配置
 
 > 	If you HAVE NO ANSYS 2021R1 with SSQ's crack installed
@@ -88,44 +77,5 @@ mpiexec -n 4 /home/hyt/dyna/ls11 i=test.k ncpu=4
 
 /usr/lsdyna_smp_r11.2.1/ls11_smp i=test.k ncpu=4
 
-mpiexec -n 4 /usr/lsdyna_smp_r11.2.1/ls11_smp i=test.k ncpu=4 (测试)
+mpirun -np 4 /usr/lsdyna_smp_r11.2.1/ls11_smp i=test.k ncpu=4 (测试)
 
-# 并行Openmpi安装
-
-很多时候，安装Openmpi，输入sudo....后，会出现“无法找到安装包”的情况，又说先“update”或者再“upgrade”的。但我也照做了，可是并没有什么用。
-
-后来我参考了很多方法，亲测了一种，有效！！！
-
-\1. 下载解压，指定安装路径：
-
-wget https://www.open-mpi.org/software/ompi/v2.0/downloads/openmpi-4.1.2.tar.gz
-
-tar zxvf openmpi-4.1.2.tar.gz
-
-cd openmpi-4.1.2 
-
-sudo ./configure --prefix=/usr/local
-
-2.编译安装：
-
-sudo make
-
-sudo make install
-
-\3. 配置环境变量（~/.bashrc）
-
-export PATH=$PATH:/usr/local/openmpi/bin 
-
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/openmpi/lib/
-
-source ~/.bashrc 
-
-sudo ldconfig 
-
-4.测试：
-
-cd examples
-
-make
-
-mpirun -np 8 hello_c
