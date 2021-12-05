@@ -63,7 +63,7 @@
 
 调用mpi启动mpp求解器(root用户组)：
 
---allow-run-as-root
+``` --allow-run-as-root```
 
 mpiexec --allow-run-as-root  -n 4 /home/hyt/dyna/ls11 i=test.k ncpu=4
 

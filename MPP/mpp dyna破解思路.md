@@ -14,7 +14,7 @@
 >
 > ​			加入：LSTC_LICENSE=ANSYS
 >
-> ​			在该home下的~/.bashrc文件末写上source /etc/profile。
+> ​			在该home下的gedit ~/.bashrc文件末写上source /etc/profile。
 >
 > ​	二、或者把```export LSTC_LICENSE=ANSYS```语句写在home下的.bashrc文件末尾。
 >
@@ -34,18 +34,18 @@
 > 以下破解为参考
 > 
 > 		If you HAVE NO ANSYS 2021R1 with SSQ's crack installed
->					
+>						
 > 	1. Extract folder lsdyna_smp_r11.2.1 to /usr
->						
+>							
 > 	2. Define ANSYS licensing for LS-DYNA as:
->						
+>							
 > 	     export LSTC_LICENSE=ANSYS
 > 	     export ANSYSLIC_DIR=/usr/lsdyna_smp_r11.2.1/ansys_inc/shared_files/licensing（安装ansys破解此句不必）
->						
+>							
 > 	     > ###  注意！！！：把export语句写在home下的~/.bashrc文件里，或者在该文件里写上source /etc/profile
->						
+>							
 > 	3. Run lsdyna_smp_r11.2.1 solvers with:
->						
+>							
 > 	/usr/lsdyna_smp_r11.2.1/ls-dyna_smp_d_R11_2_1_x64_centos610_ifort160 <options> i=<inputfile>
 > 	/usr/lsdyna_smp_r11.2.1/ls-dyna_smp_d_R11_2_1_x64_centos610_pgi165 <options> i=<inputfile>
 > 	/usr/lsdyna_smp_r11.2.1/ls-dyna_smp_s_R11_2_1_x64_centos610_ifort160 <options> i=<inputfile>
@@ -53,22 +53,22 @@
 >
 >
 > 		If you HAVE ANSYS 2021R1 with SSQ's crack installed
->						
+>							
 > 	1. Extract folder lsdyna_smp_r11.2.1 to /usr
->						
+>							
 > 	2. Define ANSYS licensing for LS-DYNA as:
->						
+>							
 > 	  export LSTC_LICENSE=ANSYS
 > 	  export ANSYSLIC_DIR= full path to folder ./ansys_inc/shared_files/licensing on your computer
 > 	  (by default /opt/ansys_inc/shared_files/licensing )
->						
+>							
 > 	3. Run lsdyna_smp_r11.2.1 solvers with:
->						
+>							
 > 	/usr/lsdyna_smp_r11.2.1/ls-dyna_smp_d_R11_2_1_x64_centos610_ifort160 <options> i=<inputfile>
 > 	/usr/lsdyna_smp_r11.2.1/ls-dyna_smp_d_R11_2_1_x64_centos610_pgi165 <options> i=<inputfile>
 > 	/usr/lsdyna_smp_r11.2.1/ls-dyna_smp_s_R11_2_1_x64_centos610_ifort160 <options> i=<inputfile>
 > 	/usr/lsdyna_smp_r11.2.1/ls-dyna_smp_s_R11_2_1_x64_centos610_pgi165 <options> i=<inputfile>
->						
+>							
 > 	WWW.DOWNLOADLY.IR
 
 # 3.调用mpi启动mpp求解器(root用户组)：
@@ -89,3 +89,6 @@ mpiexec -n 4 /home/hyt/dyna/ls11 i=test.k ncpu=4
 
 mpiexec -n 4 /usr/lsdyna_smp_r11.2.1/ls11_smp i=test.k ncpu=4 (测试)
 
+
+
+sharlib软连接命令类似strings libgcc_s-3.2.3-20040414.so.1 |grep GCC_

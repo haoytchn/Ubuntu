@@ -1,0 +1,25 @@
+mpirun -np 4 /usr/ansys_inc/v211/ansys/bin/linx64/solver/ls-dyna_mpp_s_R13_0_0_x64_centos610_ifort190_avx2_openmpi4.0.0 i=/home/hyt/0dyna/testbig.k ncpu=4 memory=200m
+
+mpirun -np 4 /usr/ansys_inc/v211/ansys/bin/linx64/solver/ls-dyna_mpp_s_R13_0_0_x64_centos610_ifort190_avx2_openmpi4.0.0_sharelib i=/home/hyt/0dyna/testbig.k ncpu=4 memory=200m
+
+mpirun -np 4 /usr/ansys_inc/v211/ansys/bin/linx64/solver/ls-dyna_mpp_s_R12_1_0_x64_centos78_ifort160_avx2_platformmpi i=/home/hyt/0dyna/testbig.k ncpu=4 memory=200m
+
+
+mppdyna12.1.0intel  mppdyna12.1.0plat  smpdyna13.0.0
+mppdyna12.1.0open   smpdyna12.1.0
+
+
+#!/bin/bash
+mpirun -np 2 -hostfile hostfile /usr/ansys_inc/v211/ansys/bin/linx64/solver/mppdyna12.1.0open i=/home/hyt/0dyna/testbig.k ncpu=2 memory=20m
+
+mpirun -np 2 /usr/ansys_inc/v211/ansys/bin/linx64/solver/mppdyna12.1.0open i=/home/hyt/0dyna/testbig.k ncpu=2 memory=20m
+
+mpirun -np 2 /usr/openmpi-4.0.7/examples/hello_c
+
+sudo mpirun --allow-run-as-root -np 2 /usr/openmpi-4.0.7/examples/hello_c
+
+
+export LD_LIBRARY_PAHT=/usr/lstc
+mpicc /opt/ibm/platform_mpi/help/hello_world.c -o platform_hello
+mpirun -np 4  /opt/ibm/platform_mpi/help/platform_hello
+gedit ~/.bashrc
