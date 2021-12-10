@@ -6,4 +6,4 @@ sudo apt-get install build-essential gcc make perl dkms git vim lib32ncurses5-de
 # 安裝配置ssh
 sudo apt-get install openssh-client
 sudo apt-get install openssh-server
-sudo  /etc/init.d/ssh restart
+sudo /etc/init.d/ssh restart
