@@ -34,7 +34,7 @@
   >
   > msmpisetup.exe
 
-- D:\MPISDK\MicrosoftMP\Bin下输入指令：`set MSMPI`
+- C:\Program Files\Microsoft MPI\Bin下输入指令：`set MSMPI`
 
 - 屏幕输出4行环境变量则mpp配置成功
 
