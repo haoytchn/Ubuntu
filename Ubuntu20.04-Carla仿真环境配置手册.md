@@ -13,6 +13,7 @@ source  ~/.bashrc # 刷新环境变量
 **一些命令：**
 
 ```bash
+pwd # 输出当前路径
 cd ~ # 进入用户根目录
 sudo chmod -R 777 filename # 文件加权
 ls -a # 显示所有文件包含隐藏文件
@@ -257,4 +258,33 @@ tar -zxvf AdditionalMaps_0.9.14.tar.gz -C ./carla
 
 #### c. 下载docker镜像运行
 
-## 
+
+
+
+
+## 四、Git配置
+
+```bash
+# 命令，看是否已有配置
+~/.ssh
+# 出现 /c/Users/XXXX/.ssh: No such file or directory，表示未配置ssh
+
+# 命令，生成rsa密钥
+ssh-keygen -t rsa -C "yourmail@gmail.com"
+
+# 生成两个文件：
+# id_rsa
+# id_rsa.pub
+# 将id_rsa.pub内容复制到github账号里
+
+# 命令，查看是否成功连接github账号
+ssh -T git@github.com
+
+Are you sure you want to continue connecting (yes/no/[fingerprint])? 
+yes
+# 输入yes
+
+You've successfully authenticated, but GitHub does not provide shell access.
+# 表示连接成功
+```
+
