@@ -230,37 +230,80 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple # 换�
 
 **安装：**	
 
-tar -zxvf CARLA_0.9.14.tar.gz -C ./carla
-tar -zxvf AdditionalMaps_0.9.14.tar.gz -C ./carla
+```tar -zxvf CARLA_0.9.14.tar.gz -C ./carla```
+```tar -zxvf AdditionalMaps_0.9.14.tar.gz -C ./carla```
 
-要运行的.sh需要赋权。
+> 要运行的.sh需要赋权。
 
 ​	将下载的 AdditionalMaps_0.9.13.tar.gz 放到 carla 的 import 目录下
-​	cd carla
-​	./ImportAssets.sh
-​	sudo apt-get install libomp5 # 安装需要的动态链库
+​	```cd carla```
+​	```./ImportAssets.sh```
+​	```sudo apt-get install libomp5 # 安装需要的动态链库```
 
 **运行：**
 
-​	./CarlaUE4.sh -prefernvidia
-​	./CarlaUE4.sh -prefernvidia -quality-level=Low -benchmark -fps=15
-​	 -prefernvidia：使用NVIDIA显卡启动
-​	-quality-level=Low：调低渲染水平
-​	-benchmark -fps=15：引擎以1/15秒的固定时间逐步运行
+​	```./CarlaUE4.sh -prefernvidia```
+​	```./CarlaUE4.sh -prefernvidia -quality-level=Low -benchmark -fps=15```
+
+启动 CARLA 时，有一些配置选项可用：
+
+- carla-rpc-port=N：侦听端口 N 处的客户端连接。默认情况下，流式端口 Streaming port 设置为 N+1
+
+- ```carla-streaming-port=N```：指定用于传感器数据流的端口。 使用 0 获取随机未使用的端口。 第二个端口将自动设置为 N + 1
+- ```quality-level={Low,Epic}```：更改图形质量级别
+- ```-carla-server```：让 carla以服务的方式运行
+- ```-benchmark -fps=15```：引擎以1/15秒的固定时间逐步运行
+- ```-windowed -ResX=800 -ResY=600```：屏幕窗口大小
 
 **操作：**
 
-​	隐藏房屋建筑，仅留下道路，减少显卡渲染的任务量，方法：Shift+V  全选建筑物   Shift+B 隐藏所有建筑物。
+隐藏房屋建筑，仅留下道路，减少显卡渲染的任务量，方法：Shift+V  全选建筑物   Shift+B 隐藏所有建筑物。
 
 #### b.  Clone源码编译安装
 
+##### ①安装UE
 
+- 注册关联UE与Github账号，成为开发者成员。`https://www.unrealengine.com/en-US/ue-on-github`
+
+- 下载
+
+  ```bash
+  # aria2是一个下载加速工具
+  sudo apt-get install aria2
+  
+  git clone --depth 1 -b carla https://github.com/CarlaUnreal/UnrealEngine.git 
+  ```
+
+  ~/UnrealEngine_4.26这里还需要修改一下，下载指定branch版本
+
+- 编译
+
+  ```bash
+  # 安装编译工具
+  
+  ```
+  
+  ```bash
+  # 编译UE4
+  cd ~/UnrealEngine_4.26
+  ./Setup.sh && ./GenerateProjectFiles.sh && make
+  ```
+  
+  ```bash
+  # UE4环境变量
+  sudo gedit ~/.bashrc
+  export UE4_ROOT=~/UnrealEngine_4.26
+  ```
+  
+  
+
+##### ②安装Carla
+
+`git clone -b 0.9.14 https://github.com/carla-simulator/carla.git`
 
 #### c. 下载docker镜像运行
 
-
-
-
+见网络搜索。
 
 ## 四、Git配置
 
