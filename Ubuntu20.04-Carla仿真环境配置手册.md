@@ -107,6 +107,34 @@ Categories=Developer;
 
 ```sudo snap install notepad-plus-plus```
 
+### samba共享文件夹配置：
+
+```bash
+sudo apt-get install samba
+mkdir /home/share
+chmod 777 /home/share
+```
+
+```bash
+# 加入以下配置信息
+sudo gedit /etc/samba/smb.conf
+
+# 名为share的文件夹共享
+[share]
+comment = share test
+path = /home/share
+browseable = yes
+guest ok = yes
+writable = yes
+available = yes
+```
+
+```bash
+# 重启smb服务
+service smbd restart
+# 通过\\IP访问
+```
+
 ## 一、Ubuntu科学上网
 
 Qv2ray图形+v2ray内核，所需文件可在github项目找到：
