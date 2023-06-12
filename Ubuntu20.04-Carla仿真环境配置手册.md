@@ -234,7 +234,7 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple # 换�
 
 ### 1. Python环境配置
 
-
+- 使用miniconda管理环境。
 
 ### 2. Carla安装使用
 
@@ -261,19 +261,19 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple # 换�
 ```tar -zxvf CARLA_0.9.14.tar.gz -C ./carla```
 ```tar -zxvf AdditionalMaps_0.9.14.tar.gz -C ./carla```
 
-> 要运行的.sh需要赋权。
-
-​	将下载的 AdditionalMaps_0.9.13.tar.gz 放到 carla 的 import 目录下
-​	```cd carla```
-​	```./ImportAssets.sh```
-​	```sudo apt-get install libomp5 # 安装需要的动态链库```
+```bash
+# 将下载的 AdditionalMaps_0.9.13.tar.gz 放到 carla 的 import 目录下
+cd carla
+./ImportAssets.sh
+sudo apt-get install libomp5 # 安装需要的动态链库```
+```
 
 **运行：**
 
 ​	```./CarlaUE4.sh -prefernvidia```
 ​	```./CarlaUE4.sh -prefernvidia -quality-level=Low -benchmark -fps=15```
 
-启动 CARLA 时，有一些配置选项可用：
+**启动 CARLA 时，有一些配置选项可用：**
 
 - carla-rpc-port=N：侦听端口 N 处的客户端连接。默认情况下，流式端口 Streaming port 设置为 N+1
 
@@ -289,6 +289,17 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple # 换�
 
 #### b.  Clone源码编译安装
 
+##### 编译环境准备：
+
+```bash
+# 编译工具
+sudo apt-get install cmake gcc g++
+# ubuntu20.04自带clang-10，中途会提示缺失clang-8
+sudo apt-get install clang-8
+# 编译PythonAPI会报错缺少ninja-build
+sudo apt-get install ninja-build
+```
+
 ##### ①安装UE
 
 - 注册关联UE与Github账号，成为开发者成员。`https://www.unrealengine.com/en-US/ue-on-github`
@@ -298,8 +309,11 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple # 换�
   ```bash
   # aria2是一个下载加速工具
   sudo apt-get install aria2
+  # 克隆UE
+  git clone --depth 1 -b carla https://oauth2:你的github token@github.com/CarlaUnreal/UnrealEngine.git ~/UnrealEngine_4.26
   
-  git clone --depth 1 -b carla https://github.com/CarlaUnreal/UnrealEngine.git 
+  # 上面方法未经验证，以下备用
+  # git clone -b 4.26 git@github.com:EpicGames/UnrealEngine.git ~/UnrealEngine_4.26
   ```
 
   ~/UnrealEngine_4.26这里还需要修改一下，下载指定branch版本
@@ -307,31 +321,96 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple # 换�
 - 编译
 
   ```bash
-  # 安装编译工具
-  
-  ```
-  
-  ```bash
   # 编译UE4
   cd ~/UnrealEngine_4.26
   ./Setup.sh && ./GenerateProjectFiles.sh && make
   ```
   
   ```bash
-  # UE4环境变量
-  sudo gedit ~/.bashrc
+  # UE4环境变量，注意用户环境变量，不要用root
+  gedit ~/.bashrc
   export UE4_ROOT=~/UnrealEngine_4.26
+  source ~/.bashrc
   ```
   
-  
+
+- 启动
+
+  ```bash
+  # 第一次启动UE会非常慢
+  cd ~/UnrealEngine_4.26/Engine/Binaries/Linux && ./UE4Editor
+  ```
 
 ##### ②安装Carla
 
-`git clone -b 0.9.14 https://github.com/carla-simulator/carla.git`
+- 克隆仓库
+
+  ```
+  git clone -b 0.9.12 git@github.com:carla-simulator/carla.git ~/carla
+  ```
+
+- 安装依赖
+
+  ```bash
+  # 安装依赖，doc上的命令：
+  sudo apt-get update &&
+  sudo apt-get install wget software-properties-common &&
+  sudo add-apt-repository ppa:ubuntu-toolchain-r/test &&
+  wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add - &&
+  sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main" &&
+  sudo apt-get update
+  
+  # Ubuntu 20.04.
+  sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal main"
+  sudo apt-get install build-essential clang-10 lld-10 g++-7 cmake ninja-build libvulkan1 python python-dev python3-dev python3-pip libpng-dev libtiff5-dev libjpeg-dev tzdata sed curl unzip autoconf libtool rsync libxml2-dev git
+  sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/lib/llvm-10/bin/clang++ 180 &&
+  sudo update-alternatives --install /usr/bin/clang clang /usr/lib/llvm-10/bin/clang 180
+  ```
+
+- python配置
+
+  ```bash
+  # 关于python的配置
+  # For Python 3
+  pip3 install --upgrade pip
+  
+  # 必须安装以下Python依赖:
+  pip3 install --user -Iv setuptools==47.3.1 &&
+  pip3 install --user distro &&
+  pip3 install --user wheel auditwheel
+  ```
+
+- carla编译
+
+  > 需要编译：
+  >
+  > PythonAPI
+  >
+  > launch
+  >
+  > make LibCarla 
+
+  | Command          | Description                                                  |
+  | ---------------- | ------------------------------------------------------------ |
+  | `make help`      | Prints all available commands.                               |
+  | `make launch`    | Launches CARLA server in Editor window.                      |
+  | `make PythonAPI` | Builds the CARLA client.                                     |
+  | `make LibCarla`  | Prepares the CARLA library to be imported anywhere.          |
+  | `make package`   | Builds CARLA and creates a packaged version for distribution. |
+  | `make clean`     | Deletes all the binaries and temporals generated by the build system. |
+  | `make rebuild`   | `make clean` and `make launch` both in one command.          |
+
+  ```bash
+  cd ~/carla
+  ./Update.sh
+  make PythonAPI
+  make launch
+  make LibCarla
+  ```
 
 #### c. 下载docker镜像运行
 
-见网络搜索。
+见网络。
 
 ## 四、Git配置
 
