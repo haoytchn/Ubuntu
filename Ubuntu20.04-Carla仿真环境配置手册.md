@@ -228,8 +228,8 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple # 换�
 
 ### 注意事项，避免踩坑：
 
-1. Python版本使用3.7，建议使用pip包管理（pip库比conda全和新？）
-2. UE：CALAR 0.9.12 以后的版本Unreal Engine 4.26 
+1. Python版本使用3.7，建议使用pip包管理（pip库比conda全和新？），先配置好Python环境再进行下一步。
+2. UE：CALAR 0.9.12 以后的版本Unreal Engine 4.26；以前是4.24。
 2. 显卡驱动问题：N卡VMware虚拟机驱动不支持；docker驱动支持。
 
 ### 1. Python环境配置
@@ -291,14 +291,47 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
 
 ##### 编译环境准备：
 
-```bash
-# 编译工具
-sudo apt-get install cmake gcc g++
-# ubuntu20.04自带clang-10，中途会提示缺失clang-8
-sudo apt-get install clang-8
-# 编译PythonAPI会报错缺少ninja-build
-sudo apt-get install ninja-build
-```
+> 以0.9.12为例
+
+- 安装依赖
+
+  ```bash
+  # 编译工具
+  sudo apt-get install cmake gcc g++
+  # ubuntu20.04自带clang-10，中途会提示缺失clang-8
+  sudo apt-get install clang-8 
+  # 编译PythonAPI会报错缺少ninja-build
+  sudo apt-get install ninja-build
+  ```
+
+- 坑一 - clang
+
+  ```bash
+  # clang-8的坑
+  # 如果冲突是在无法解决，使用aptitude进行安装，aptitude 会对依赖关系进行智能处理
+  sudo apt-get install aptitude
+  sudo aptitude install clang-8
+  
+  # 仍然无法解决，另一种方案
+  # http://www.taodudu.cc/news/show-1291615.html?action=onClick
+  
+  # 这里还有一个办法，将路径下calra/Util/BuildTools中的Setup.sh里的clang++-8.0等的8全部改成10.0，由于UE使用Clang-8，除非无法编译否则不建议这样改。
+  ```
+
+- 坑二 - pyconfig.h
+
+  ```bash
+  #在 make pythonAPI 的时候，可能会报错 `pyconfig.h not found`， 这里需要添加一下路径到 .bashrc 中
+  export CPLUS_INCLUDE_PATH=/home/用户名/miniconda3/envs/py37/include/python3.7m
+  ```
+
+- 坑三 - 安装xerces-c-3.2.3.tar.gz
+
+  ```bash
+  # 在运行脚本Setup.sh的时候，需要安装xerces-c-3.2.3.tar.gz，可是这个包的地址已经被修改了，需要修改/Util/BuildTools/Setup.sh文件中xerces的下载地址，把432行
+  #XERCES_REPO的地址改为:
+  https://archive.apache.org/dist/xerces/c/3/sources/xerces-c-3.2.3.tar.gz
+  ```
 
 ##### ①安装UE
 
@@ -333,7 +366,6 @@ sudo apt-get install ninja-build
   source ~/.bashrc
   ```
   
-
 - 启动
 
   ```bash
@@ -363,6 +395,8 @@ sudo apt-get install ninja-build
   # Ubuntu 20.04.
   sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal main"
   sudo apt-get install build-essential clang-10 lld-10 g++-7 cmake ninja-build libvulkan1 python python-dev python3-dev python3-pip libpng-dev libtiff5-dev libjpeg-dev tzdata sed curl unzip autoconf libtool rsync libxml2-dev git
+  
+  # 使用和UE同版本clang-8，关联clang-8
   sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/lib/llvm-10/bin/clang++ 180 &&
   sudo update-alternatives --install /usr/bin/clang clang /usr/lib/llvm-10/bin/clang 180
   ```
@@ -401,9 +435,10 @@ sudo apt-get install ninja-build
   | `make rebuild`   | `make clean` and `make launch` both in one command.          |
 
   ```bash
+  # 确保上述所有进行完之后再编译carla
   cd ~/carla
   ./Update.sh
-  make PythonAPI
+  make PythonAPI # 遇到坑一、二、三
   make launch
   make LibCarla
   ```
