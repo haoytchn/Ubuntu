@@ -308,7 +308,7 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
 
   ```bash
   # clang-8的坑
-  # 如果冲突是在无法解决，使用aptitude进行安装，aptitude 会对依赖关系进行智能处理
+  # 如果冲突实在无法解决，使用aptitude进行安装，aptitude 会对依赖关系进行智能处理
   sudo apt-get install aptitude
   sudo aptitude install clang-8
   
@@ -339,6 +339,11 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
 
 - 下载
 
+  > **Tips:**
+  > - EpicGames/UnrealEngine需要自定义配置好再编译；
+  > - CarlaUnreal/UnrealEngine直接编译即可，适用0.9.12版本以上，所以一般使用CarlaUnreal。
+  > - --depth 1克隆深度为1（最后版本）-b XXX，下载指定branch版本。
+
   ```bash
   # aria2是一个下载加速工具
   sudo apt-get install aria2
@@ -348,8 +353,6 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
   # 上面方法未经验证，以下备用
   # git clone -b 4.26 git@github.com:EpicGames/UnrealEngine.git ~/UnrealEngine_4.26
   ```
-
-  ~/UnrealEngine_4.26这里还需要修改一下，下载指定branch版本
 
 - 编译
 
