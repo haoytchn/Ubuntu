@@ -341,7 +341,7 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
 
   > **Tips:**
   > - EpicGames/UnrealEngine需要自定义配置好再编译；
-  > - CarlaUnreal/UnrealEngine直接编译即可，适用0.9.12版本以上，所以一般使用CarlaUnreal。
+  > - CarlaUnreal/UnrealEngine直接编译即可，适用0.9.12版本以上，所以一般使用CarlaUnreal（主分支版本号为4.26.2）。
   > - --depth 1克隆深度为1（最后版本）-b XXX，下载指定branch版本。
 
   ```bash
