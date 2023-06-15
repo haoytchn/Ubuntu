@@ -333,6 +333,10 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
   https://archive.apache.org/dist/xerces/c/3/sources/xerces-c-3.2.3.tar.gz
   ```
 
+- 坑四
+
+  安装编译完成后运行PythonAPI中example的例程，python maunal_control.py手动控制车辆时会发现FPS较低特别卡顿，解决方法：选择Carla编辑界面左上角**编辑**，然后选择**编辑器偏好设置**，在左侧一排选择性能，取消勾选处于背景中时占用较少CPU即可。
+
 ##### ①安装UE
 
 - 注册关联UE与Github账号，成为开发者成员。`https://www.unrealengine.com/en-US/ue-on-github`
@@ -442,8 +446,17 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
   cd ~/carla
   ./Update.sh
   make PythonAPI # 遇到坑一、二、三
+  
   make launch
-  make LibCarla
+  # make launch其实包含三条命令
+  # make setup
+  # make LibCarla
+  # make CarlaUE4Editor
+  # 分开执行也可以，方便看具体报错。若编译过程中报错，修改错误之后继续编译输入make rebuild或者先输入make clean 然后 make launch。
+  
+  make package
+  #生成可执行文件，运行即可打开Carla，否则需要输入命令make launch-only开启carla
+  # make package后，/home/用户名/carla/carla-0.9.12/Unreal/CarlaUE4/Binaries路径下会有可执行文件。
   ```
 
 #### c. 下载docker镜像运行
