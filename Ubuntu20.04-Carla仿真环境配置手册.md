@@ -19,7 +19,25 @@ sudo chmod -R 777 filename # 文件加权
 ls -a # 显示所有文件包含隐藏文件
 df -h # 查看磁盘空间
 tar -zxvf [文件名].tar.gz -C [文件目录] # 解压.gz文件到指定目录
+uname -r # 查看内核版本
+lsb_release -a# 查看发现版本号
 ```
+
+### 驱动问题：
+
+1. 网卡驱动
+
+2. 显卡驱动
+
+   - NVIDIA网站`https://www.nvidia.com/Download/index.aspx`查找显卡型号，获得.run驱动程序并安装。
+
+     > https://blog.csdn.net/huiyoooo/article/details/128015155
+
+   - NVIDIA Container Toolkit用于支持Docker调用显卡，可额外安装。
+
+     > https://blog.csdn.net/szylight2022/article/details/127302334
+
+3. 声卡驱动
 
 ### 设定root密码：
 
