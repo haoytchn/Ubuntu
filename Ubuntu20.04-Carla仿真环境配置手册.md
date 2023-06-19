@@ -23,13 +23,16 @@ tar -zxvf [文件名].tar.gz -C [文件目录] # 解压.gz文件到指定目录
 
 ### 设定root密码：
 
-` sudo passwd`
+```bash
+sudo passwd
+```
 
 ### 更新系统：
 
-`sudo apt update`
-
-`sudo apt upgrade`
+```bash
+sudo apt update # 换源后需要进行此操作
+sudo apt upgrade
+```
 
 ### 双系统问题：
 
@@ -41,13 +44,77 @@ tar -zxvf [文件名].tar.gz -C [文件目录] # 解压.gz文件到指定目录
 
    - 永久修改启动顺序：
 
-     `/etc/default/grub`，通过修改`GRUB_DEFAULT=0`这个值。
+     `/etc/default/grub`，通过修改`GRUB_DEFAULT=0`这个值修改启动设置。
 
+     修改配置后需运行`sudo update-grub`更新设置。
+   
+     ```bash
+     GRUB_DEFAULT=0
+     #属性名：默认启动项（就是我要的开机默认启动系统）
+     #值说明：
+     #	数字：从0开始（按照开机选择界面的顺序对应）
+     #	saved:默认上次的启动项
+     
+     GRUB_HIDDEN_TIMEOUT_QUIET=true
+     #属性名：是否显示等待倒计时
+     #值说明：true：不显示，false：显示
+     
+     GRUB_TIMEOUT=10
+     #属性名：进入默认启动项的等候时间
+     #值说明：单位：秒，默认10秒，-1表示一直等待
+     
+     GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
+     GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+     #属性名：内核启动参数的默认值
+     #值说明：quiet splash为不显示启动信息，安静的启动，如值为空则显示启动信息
+     
+     GRUB_CMDLINE_LINUX=""
+     #属性名：手动添加内核启动参数
+     #值说明：默认为空，可以添加你需要的参数，以 “name=value” 的格式添加，多个参数用空格隔开
+     #例如：GRUB_CMDLINE_LINUX="name1=value1 name2=value2"
+     
+     GRUB_TERMINAL=console
+     #属性名：是否使用图形介面
+     #值说明：默认使用图像界面，去掉前面的“#”则使用控制台终端
+     
+     GRUB_GFXMODE=640x480
+     #属性名：图形界面分辨率
+     #值说明：分辨率啦（还要怎么说明），修改时记得去掉前面的“#”
+     
+     GRUB_DISABLE_LINUX_UUID=true
+     #属性名：grub命令是否使用UUID
+     #值说明：不知道是干什么的，不常用（如果你知道，欢迎留言，谢谢）
+     
+     GRUB_DISABLE_RECOVERY="true"
+     #属性名：是否创建修复模式菜单项
+     #值说明：true:禁用，false：使用，默认false
+     
+     GRUB_INIT_TUNE="480 440 1"
+     #属性名：启动时发出哔哔声
+     #值说明：默认不发声，去掉“#”则发声，值是什么意思不明白（应该是发出声音方式吧）
+     ```
+   
    - 通过bash指令，指定重启到Windows系统，但不影响BIOS默认的选择：
    
      ```bash
-     sudo grub-reboot 2 #指定选择Windows系统
+     sudo grub-reboot 2 #指定选择Windows系统，grub引导时看到的顺序，从0开始。
      sudo reboot
+     ```
+     
+     ```bash
+     # 为了快捷方便，可以在桌面创建快捷方式，并写一个可执行脚本来实现重启。
+     # 创建快捷方式
+     [Desktop Entry]
+     Encoding=UTF-8
+     Name=Reboot to Windows
+     Icon=help-about
+     Exec=bash /home/你的.sh文件绝对路径
+     Type=Application
+     Terminal=false
+     
+     # .sh文件
+     echo "你的sudo密码" | sudo -S grub-reboot 2
+     echo "你的sudo密码" | sudo -S reboot
      ```
    
 
@@ -74,6 +141,32 @@ tar -zxvf [文件名].tar.gz -C [文件目录] # 解压.gz文件到指定目录
   sudo dpkg-reconfigure gdm
   # 设置ubuntu开机的默认开启方式为图形化界面显示
   sudo systemctl set-default graphical.target
+  ```
+
+- VNC
+
+  ```bash
+  vi ~/.vnc/xstartup
+  --------------
+  unset SESSION_MANAGER
+  unset DBUS_SESSION_BUS_ADDRESS
+  export XKL_XMODMAP_DISABLE=1
+  export XDG_CURRENT_DESKTOP="GNOME-Flashback:GNOME"
+  export XDG_MENU_PREFIX="gnome-flashback-"
+  [ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+  [ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+  xsetroot -solid grey
+  vncconfig -iconic &
+  #gnome-terminal &    
+  #nautilus &   
+  gnome-session --session=gnome-flashback-metacity --disable-acceleration-check &
+  ————————————————
+  export XDG_RUNTIME_DIR=$HOME
+  
+  # 创建端口
+  vncserver :1 -geometry 1920x1000 -depth 24
+  # 关闭端口
+  vncserver -kill :1
   ```
 
 ### 安装Typora压缩包程序：
@@ -242,15 +335,18 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple # 换�
 
 >- 下载编译好的Release版本运行
 >
->  只能运行，不能自定义场景等。
+>   只能运行，不能自定义场景等。
 >
 >- Clone源码编译安装
 >
->  推荐方式。
+>   推荐方式。
 >
 >- 下载Docker镜像运行
 >
->  网上反馈并不好用。
+>   网上反馈并不好用。
+>
+>- openCDA版本0.9.12和carlaUE(4.26)
+>
 
 #### a. 使用编译好的版本
 
@@ -461,7 +557,7 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
 
 #### c. 下载docker镜像运行
 
-见网络。
+待补充。
 
 ## 四、Git配置
 
@@ -487,5 +583,12 @@ yes
 
 You've successfully authenticated, but GitHub does not provide shell access.
 # 表示连接成功
+
+# 关于clone的两种方式，github推荐第二种
+# ssh clone:
+git clone --depth 1 -b carla git@github.com:CarlaUnreal/UnrealEngine.git ~/UnrealEngine_4.26
+
+# token clone
+git clone --depth 1 -b carla https://oauth2:你的github token@github.com/CarlaUnreal/UnrealEngine.git ~/UnrealEngine_4.26
 ```
 
