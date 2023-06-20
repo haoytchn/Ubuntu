@@ -142,6 +142,16 @@ sudo apt upgrade
 
 ### 图形化桌面问题：
 
+- Ubuntu22.04桌面图标不见的解决办法
+
+  ```bash
+  # 设置不见
+  sudo apt-get install unity-control-center
+  sudo apt-get install gnome-control-center
+  # 桌面不见
+  sudo apt-get install --reinstall ubuntu-desktop
+  ```
+
 - 默认图形修复、安装：
 
   ```bash
