@@ -520,6 +520,22 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
   sudo apt install libtiff-dev
   ```
   
+- 坑九
+
+  OpenCDA中sumo联合仿真的错误：
+
+  ```
+  AttributeError: module 'traci' has no attribute 'sumolib'
+  ```
+
+  原因：
+
+  sumolib是独立的包，不在traci里面。
+
+  解决办法：
+
+  把carla/Co-Simulation/Sumo/sumo_integration/sumo_simulation.py的304行的这一句代码改成sumo_net = sumolib.net.readNet(net_file)。
+
 ##### ①安装UE
 
 > 在安装UE之前需要完成所有依赖和环境配置。先完成后面Carla安装部分的依赖安装。
