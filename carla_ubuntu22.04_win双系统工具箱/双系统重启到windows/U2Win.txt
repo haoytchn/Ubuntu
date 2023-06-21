@@ -1,0 +1,2 @@
+sudo grub-reboot 2 #指定选择Windows系统
+sudo reboot
