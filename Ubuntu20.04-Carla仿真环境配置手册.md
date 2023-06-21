@@ -351,6 +351,12 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple # 换�
 
 ## 三、Carla-Ubuntu安装配置
 
+### 前言：
+
+本来使用ubuntu20.04安装，但是由于电脑较新，驱动问题很多需要使用高版本内核，改用ubuntu22.04编译安装，会有很多新的坑，基本记录在下面。
+
+其它问题看报错的编译文件，自行修改该文件可以解决，基本是clang-8问题和网络问题，可以把配置文件里访问失败的地址换为国内github镜像仓库。
+
 ### 注意事项，避免踩坑：
 
 1. Python版本使用3.7，建议使用pip包管理（pip库比conda全和新？），先配置好Python环境再进行下一步。
@@ -443,7 +449,7 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
   # 仍然无法解决，另一种方案
   # http://www.taodudu.cc/news/show-1291615.html?action=onClick
   
-  # 这里还有一个办法，将路径下calra/Util/BuildTools中的Setup.sh里的clang++-8.0等的8全部改成10.0，由于UE使用Clang-8，除非无法编译否则不建议这样改。
+  # 这里还有一个办法，将路径下calra/Util/BuildTools中的Setup.sh里的clang++-8.0等的8全部改成10.0。Ubuntu22.04建议用这种方式。
   ```
 
 - 坑二 - pyconfig.h
@@ -464,8 +470,59 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
 - 坑四
 
   安装编译完成后运行PythonAPI中example的例程，python maunal_control.py手动控制车辆时会发现FPS较低特别卡顿，解决方法：选择Carla编辑界面左上角**编辑**，然后选择**编辑器偏好设置**，在左侧一排选择性能，取消勾选处于背景中时占用较少CPU即可。
+  
+- 坑五
 
+  执行bootstrap.sh可能遇到报错./bootstrap.sh: 2: autoreconf: not found，执行下面命令解决：
+
+  `sudo apt-get install autoconf automake libtool`
+
+  其它问题大概率网络原因，不断重试make就可以。
+
+- 坑六
+  
+  报一堆错：
+  
+  ../../LibCarla/source/test/common/test_streaming.cpp:63:3: error: reference to 'Client' is ambiguous
+  
+  原因：
+  
+  这个错误出现的主要的原因是test_streaming.cpp 文件中出现多个层级的Server 定义和Client 定义。我不确定是哪个Server和Client，但因为出现错误的地方在low-level的定义下，所以把上面cpp文件中行的Server 和Client分别改成 carla::streaming::low_level::Server 和 carla::streaming::low_level::Client，重新编译即可。
+  
+  解决办法：
+  
+  carla/LibCarla/source/test/common/test_streaming.cpp,58,63,93,96行加入carla::streaming::low_level:: 。
+  
+- 坑七
+
+  报错：
+
+  CMake Error at /usr/share/cmake-3.22/Modules/CMakeDetermineCXXCompiler.cmake:48
+
+  解决办法：
+
+  ./carla/Util/BuildTools/BuildOSM2ODR.sh文件修改clang-8为clang-10
+
+
+- 坑八
+  
+  ubuntu22.04编译PythonAPI会报错：
+  
+  ```bash
+  /home/xxx/miniconda3/envs/py37/compiler_compat/ld: cannot find -ljpeg: 没有那个文件或目录
+  /home/xxx/miniconda3/envs/py37/compiler_compat/ld: cannot find -ltiff: 没有那个文件或目录
+  ```
+  
+  原因为缺少jpeg和tiff的库，解决办法：
+  
+  ```bash
+  sudo apt install libjpeg-dev
+  sudo apt install libtiff-dev
+  ```
+  
 ##### ①安装UE
+
+> 在安装UE之前需要完成所有依赖和环境配置。先完成后面Carla安装部分的依赖安装。
 
 - 注册关联UE与Github账号，成为开发者成员。`https://www.unrealengine.com/en-US/ue-on-github`
 
@@ -493,14 +550,14 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
   cd ~/UnrealEngine_4.26
   ./Setup.sh && ./GenerateProjectFiles.sh && make
   ```
-  
+
   ```bash
   # UE4环境变量，注意用户环境变量，不要用root
   gedit ~/.bashrc
   export UE4_ROOT=~/UnrealEngine_4.26
   source ~/.bashrc
   ```
-  
+
 - 启动
 
   ```bash
@@ -573,7 +630,8 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
   # 确保上述所有进行完之后再编译carla
   cd ~/carla
   ./Update.sh
-  make PythonAPI # 遇到坑一、二、三
+  
+  make PythonAPI ARGS="--python-version=3.7" # 基本遇到所有坑
   
   make launch
   # make launch其实包含三条命令
@@ -583,7 +641,8 @@ sudo apt-get install libomp5 # 安装需要的动态链库```
   # 分开执行也可以，方便看具体报错。若编译过程中报错，修改错误之后继续编译输入make rebuild或者先输入make clean 然后 make launch。
   
   make package
-  #生成可执行文件，运行即可打开Carla，否则需要输入命令make launch-only开启carla
+  # 可选
+  # 生成可执行文件，运行即可打开Carla，否则需要输入命令make launch-only开启carla
   # make package后，/home/用户名/carla/carla-0.9.12/Unreal/CarlaUE4/Binaries路径下会有可执行文件。
   ```
 
